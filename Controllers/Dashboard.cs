@@ -132,7 +132,7 @@ namespace DeskBookingSystem.Controllers
 
             var startTime = DateTime.ParseExact(viewModel.StartTime, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             var endTime = DateTime.ParseExact(viewModel.EndTime, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            var difference = startTime - endTime;
+            var difference = endTime - startTime;
             if (Math.Abs(difference.TotalDays) > 5)
             {
                 ModelState.AddModelError(string.Empty, "You can book the desk for max. 5 days.");

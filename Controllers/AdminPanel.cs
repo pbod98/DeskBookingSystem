@@ -97,7 +97,7 @@ namespace DeskBookingSystem.Controllers
         [HttpGet]
         public ActionResult RemoveLocation(int locationId)
         {
-            var location = _context.Locations.Include(l => l.Desks).Where(l => l.Id == locationId).FirstOrDefault();
+            var location = _context.Locations.Find(locationId);
 
             if (location == null)
             {
@@ -109,6 +109,8 @@ namespace DeskBookingSystem.Controllers
         [HttpPost]
         public ActionResult RemoveLocation(Location location)
         {
+            location = _context.Locations.Include(l => l.Desks).Where(l => l.Id == location.Id).FirstOrDefault();
+
             if (location == null)
             {
                 return NotFound();
@@ -241,7 +243,7 @@ namespace DeskBookingSystem.Controllers
         [HttpGet]
         public ActionResult RemoveDesk(int deskId)
         {
-            var Desk = _context.Desks.Include(d => d.Bookings).Where(d => d.Id == deskId).FirstOrDefault();
+            var Desk = _context.Desks.Find(deskId);
 
             if (Desk == null)
             {
@@ -253,7 +255,7 @@ namespace DeskBookingSystem.Controllers
         [HttpPost]
         public ActionResult RemoveDesk(DeskViewModel viewModel)
         {
-            var Desk = _context.Desks.Find(viewModel.DeskId);
+            var Desk = _context.Desks.Include(d => d.Bookings).Where(d => d.Id == viewModel.DeskId).FirstOrDefault();
 
             if (Desk == null)
             {
@@ -263,11 +265,8 @@ namespace DeskBookingSystem.Controllers
             {
                 foreach(var booking in Desk.Bookings)
                 {
-                    if(booking.Active)
-                    {
-                        ModelState.AddModelError(string.Empty, "This desk is already booked.");
-                        return View(viewModel);
-                    }
+                     ModelState.AddModelError(string.Empty, "This desk is already booked.");
+                     return View(Desk);
                 }
             }
 

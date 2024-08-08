@@ -9,11 +9,11 @@
         }
         public bool IsDeskBooked(int deskId, DateTime startTime, DateTime endTime, int userId)
         {
-            var isAlreadyBooked = _context.Bookings
+            var existingBooking = _context.Bookings
                 .Where(b => b.DeskId == deskId)
                 .Any(b => (b.StartTime < endTime && b.EndTime > startTime));
 
-            if (isAlreadyBooked)
+            if (!existingBooking)
             {
                 return false;
             }
