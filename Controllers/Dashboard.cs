@@ -1,11 +1,8 @@
-﻿using DeskBookingSystem.Migrations;
-using DeskBookingSystem.Models;
+﻿using DeskBookingSystem.Models;
 using DeskBookingSystem.Services;
 using DeskBookingSystem.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -48,8 +45,8 @@ namespace DeskBookingSystem.Controllers
                         Bookings = d.Bookings.Select(b => new BookingViewModel
                         {
                             UserName = b.User.UserName,
-                            StartTime = b.StartTime.ToString("mm/dd/yyyy"),
-                            EndTime = b.EndTime.ToString("mm/dd/yyyy")
+                            StartTime = b.StartTime.ToString("MM/dd/yyyy"),
+                            EndTime = b.EndTime.ToString("MM/dd/yyyy")
                         }).ToList()
                     }).ToList()
                 }).ToList();
@@ -57,6 +54,56 @@ namespace DeskBookingSystem.Controllers
             viewModel.Desks = groupedViewModel;
 
             return View(viewModel);
+        }
+       
+        [Route("Dashboard/FilterByLocation")]
+        [HttpPost]
+        public IActionResult FilterByLocation(DashboardViewModel viewModel)
+        {
+            if (string.IsNullOrWhiteSpace(viewModel.LocationQuery))
+            {
+                ModelState.AddModelError(string.Empty, "Location name cannot be empty.");
+                return RedirectToAction("Index", viewModel.UserId);
+            }
+
+            var location = _context.Locations.Where(l => l.Name == viewModel.LocationQuery).FirstOrDefault();
+
+            if (location == null)
+            {
+                ModelState.AddModelError(string.Empty, "This location does not exist.");
+                return RedirectToAction("Index", viewModel.UserId);
+            }
+
+            var deskList = _context.Desks
+                .Include(d => d.Location)
+                .Include(d => d.Bookings).ThenInclude(b => b.User)
+                .Where(d => d.LocationId == location.Id)
+                .ToList();
+
+            var searchResult = deskList
+                .Select(d => new DeskViewModel
+                {
+                    DeskId = d.Id,
+                    DeskName = d.Name,
+                    Description = d.Description,
+                    Bookings = d.Bookings.Select(b => new BookingViewModel
+                    {
+                        UserName = b.User.UserName,
+                        StartTime = b.StartTime.ToString("MM/dd/yyyy"),
+                        EndTime = b.EndTime.ToString("MM/dd/yyyy")
+                    }).ToList()
+                }).ToList();
+
+            viewModel.Desks = new List<GroupedDeskViewModel>
+                {
+                    new GroupedDeskViewModel
+                    {
+                        Desks = searchResult,
+                        Location = location.Name
+                    }
+                };
+
+            return View("Index", viewModel);
         }
         [HttpGet]
         public IActionResult BookDesk(int deskId, int userId)

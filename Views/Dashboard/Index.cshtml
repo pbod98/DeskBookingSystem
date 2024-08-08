@@ -5,6 +5,22 @@
 {
     <a href="@Url.Action("Manage", "AdminPanel")" class="btn btn-primary">Manage</a>
 }
+<form action="/Dashboard/FilterByLocation" method="post">
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.LocationQuery)
+    @Html.HiddenFor(m => m.isAdmin)
+    <div class="form-group">
+        @Html.Label("Search by location")
+        @Html.TextBoxFor(m => m.LocationQuery, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.LocationQuery, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
 
 <table class="table table-striped">
     <thead>
