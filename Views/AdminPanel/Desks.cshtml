@@ -1,0 +1,30 @@
+﻿@using DeskBookingSystem.ViewModels
+@model List<GroupedDeskViewModel>
+
+
+@foreach (var group in Model)
+{
+    <h2>@group.Location</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var desk in group.Desks)
+            {
+                <tr>
+                    <td>@desk.DeskName</td>
+                    <td>@desk.Description</td>
+                    <td>
+                        <a href="@Url.Action("EditDesk", "AdminPanel", new { deskId = desk.DeskId })" class="btn btn-secondary">Edit</a>
+                        <a href="@Url.Action("RemoveDesk", "AdminPanel", new { deskId = desk.DeskId })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

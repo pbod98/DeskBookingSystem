@@ -1,0 +1,16 @@
+﻿@using DeskBookingSystem.ViewModels;
+@model LocationViewModel
+
+<form asp-action="AddLocation" method="post">
+    <div class="form-group">
+        @Html.Label("Name")
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

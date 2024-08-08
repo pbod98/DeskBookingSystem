@@ -1,0 +1,60 @@
+﻿@using DeskBookingSystem.ViewModels
+@model DashboardViewModel
+
+@if(Model.isAdmin)
+{
+    <a href="@Url.Action("Manage", "AdminPanel")" class="btn btn-primary">Manage</a>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th>Desk</th>
+            <th>Description</th>
+            @if(Model.isAdmin)
+            {
+                <th>Booked from</th>
+                <th>Booked to</th>
+                <th>Booked by</th>
+            }
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var locationGroup in Model.Desks)
+        {
+            foreach (var desk in locationGroup.Desks)
+            {
+                <tr>
+                    <td>@locationGroup.Location</td>
+                    <td>@desk.DeskName</td>
+                    <td>@desk.Description</td>
+                    @if(Model.isAdmin)
+                    {
+                        if(desk.Bookings.ToList().Any())
+                        {
+                            <td colspan="3">
+                                <table class="table">
+                                    @foreach (var booking in desk.Bookings)
+                                    {
+                                        <tr>
+                                            <td>@booking.StartTime</td>
+                                            <td>@booking.EndTime</td>
+                                            <td>@booking.UserName</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="3"></td>
+                        }
+                    }
+                    <td><a href="@Url.Action("BookDesk", "Dashboard", new { deskId = desk.DeskId, userId = Model.UserId })" class="btn btn-primary">Book</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

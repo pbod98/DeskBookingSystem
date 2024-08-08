@@ -1,0 +1,19 @@
+﻿@using DeskBookingSystem.ViewModels;
+@model LocationViewModel
+
+<a href="@Url.Action("AddDesk", "AdminPanel", new {locationId = Model.Id})" class="btn btn-primary">Add desk</a>
+
+<form asp-action="EditLocation" method="post">
+    @Html.HiddenFor(m => m.Id)
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

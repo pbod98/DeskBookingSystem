@@ -1,0 +1,14 @@
+﻿@using DeskBookingSystem.Models;
+@model Location
+
+<form asp-action="RemoveLocation" method="post">
+    <div class="form-group">
+        <p>Are you sure?</p>
+        @Html.HiddenFor(m => m.Id)
+        <div class="form-group">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </div>
+        <button type="submit" class="btn btn-primary">Yes</button>
+        <a href="@Url.Action("Locations", "AdminPanel")" class="btn btn-primary">Cancel</a>
+    </div>
+</form>

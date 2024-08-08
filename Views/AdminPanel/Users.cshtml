@@ -1,0 +1,27 @@
+﻿@using DeskBookingSystem.ViewModels
+@model List<UserViewModel>
+
+<a href="@Url.Action("AddUser", "AdminPanel")" class="btn btn-primary">Add location</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Roles</td>
+                <td>
+                    <a href="@Url.Action("EditUserRole", "AdminPanel", new { userId = user.Id })" class="btn btn-secondary">Edit</a>
+                    <a href="@Url.Action("RemoveUser", "AdminPanel", new { userId = user.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

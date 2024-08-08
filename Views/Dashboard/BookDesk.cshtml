@@ -1,0 +1,23 @@
+﻿@using DeskBookingSystem.ViewModels
+@model BookingViewModel
+
+<form asp-action="EditLocation" method="post">
+    @Html.HiddenFor(m => m.DeskId)
+    @Html.HiddenFor(m => m.UserId)
+    <div class="form-group">
+        @Html.Label("Book from: ")
+        @Html.TextBoxFor(m => m.StartTime, new { @class = "form-control", placeholder = "MM/DD/YYYY" })
+        @Html.ValidationMessageFor(m => m.StartTime, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.Label("Book to: ")
+        @Html.TextBoxFor(m => m.EndTime, new { @class = "form-control", placeholder = "MM/DD/YYYY" })
+        @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
